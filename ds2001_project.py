@@ -14,10 +14,16 @@ df = pd.read_csv(r'/Users/amelianorman/Desktop/ds2001-project/clinical_breast_cl
 print(df.head())
 
 #%%
+
+# rename columns and remove rows with male participants 
+
 cleaned = df[["Gender", "Age.at.Initial.Pathologic.Diagnosis", "AJCC.Stage"]]
 cleaned = cleaned.rename(columns={"Age.at.Initial.Pathologic.Diagnosis": "initial_age", "AJCC.Stage": "AJCC_stage"})
 
-print(cleaned)
+cleaned = cleaned.drop(cleaned[cleaned.Gender == "MALE"].index)
+        
+print(cleaned.Gender.unique())
+
 #%%
 #plt.scatter(cleaned.initial_age, cleaned.AJCC_stage)
 #plt.title('Age vs Cancer Stage')
@@ -29,18 +35,26 @@ print(cleaned)
 # fixing indexing on graph; y-axis is showing values in the incorrect order
 
 order = ["Stage I", "Stage IA", "Stage IB", "Stage II", "Stage IIA", "Stage IIB", "Stage III", "Stage IIIA", "Stage IIIB", "Stage IIIC", "Stage IV"]
+order2 = ["I", "IA", "IB", "II", "IIA", "IIB", "III", "IIIA", "IIIB", "IIIC", "IV"]
 
 cleaned['AJCC_stage'] = [order.index(x) for x in cleaned['AJCC_stage']]
 
 df_sorted = cleaned.sort_values(["AJCC_stage", "initial_age", "Gender"], ascending=True)
 
-df_sorted['AJCC_stage'] = [order[x] for x in df_sorted['AJCC_stage']]
+df_sorted['AJCC_stage'] = [order2[x] for x in df_sorted['AJCC_stage']]
 
 #%%
 plt.scatter(df_sorted['initial_age'], df_sorted['AJCC_stage'])
 plt.title('Age vs Cancer Stage')
 plt.xlabel('Age') 
 plt.ylabel('AJCC Breast Cancer Stage') 
+plt.grid()
+
+#%%
+plt.scatter(df_sorted['AJCC_stage'], df_sorted['initial_age'])
+plt.title('Age vs Cancer Stage')
+plt.xlabel('AJCC Breast Cancer Stage') 
+plt.ylabel('Age') 
 plt.grid()
 
 #%%
