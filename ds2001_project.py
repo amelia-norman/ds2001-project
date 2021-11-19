@@ -78,7 +78,6 @@ plt.show()
 
 #%%
 # bar graph for cancer stage grouped by age
-print(df_sorted.head())
-print(out.head())
-        
+import seaborn as sns
+ax = sns.countplot(x="AJCC_stage", hue="initial_age", data=df_sorted)
     
